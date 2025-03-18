@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-Homepage = "PLUGIN_HOMEPAGE"
+Homepage = "git://github.com/QUARK-framework/QUARK-plugin-tsp.git"
 
 [project]
-name = "PLUGIN_NAME"
+name = "QUARK-plugin-tsp"
 version = "0.1"
 readme = "README.md"
 requires-python = ">=3.12"
