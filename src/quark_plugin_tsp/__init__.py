@@ -1,13 +1,10 @@
 from quark.plugin_manager import factory
 
-from quark_plugin_tsp.example_module import ExampleModule
+from quark_plugin_tsp.tsp_graph_provider import TspGraphProvider
+from quark_plugin_tsp.tsp_qubo_mapping_dnx import TspQuboMappingDnx
+from quark_plugin_tsp.classical_tsp_solver import ClassicalTspSolver
 
 def register() -> None:
-    """
-    Register all modules exposed to quark by this plugin.
-    For each module, add a line of the form:
-        factory.register("module_name", Module)
-
-    The "module_name" will later be used to refer to the module in the configuration file.
-    """
-    factory.register("example_module", ExampleModule)
+    factory.register("tsp_graph_provider", TspGraphProvider)
+    factory.register("tsp_qubo_mapping_dnx", TspQuboMappingDnx)
+    factory.register("classical_tsp_solver", ClassicalTspSolver)
