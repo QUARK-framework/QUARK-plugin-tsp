@@ -16,7 +16,7 @@ authors = [
     { name = "Florian Kiwit", email = "florian.kiwit@bmw.de" },
     { name = "Benjamin Decker", email = "benjamin.decker@bmw.de" },
 ]
-description = "Tsp plugin for the quark framework"
+description = "Quark plugin providing problem generation and mapping modules for the tsp problem"
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [
