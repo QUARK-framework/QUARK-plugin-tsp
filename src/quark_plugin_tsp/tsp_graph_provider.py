@@ -5,6 +5,7 @@ import math
 import networkx as nx
 
 from quark.protocols import Core
+import logging
 
 @dataclass
 class TspGraphProvider(Core):
@@ -38,18 +39,18 @@ class TspGraphProvider(Core):
     @override
     def postprocess(self, data: Optional[list[int]]) -> Optional[float]:
         if data is None:
-            print("No route found")
+            logging.warn("No route found")
             return None
 
         if any(node not in data for node in self._graph.nodes()):
-            print("Invalid route: Not all nodes were visited")
+            logging.warn("Invalid route: Not all nodes were visited")
             return None
-        print(f"All {len(self._graph.nodes())} nodes were visited")
+        logging.info(f"All {len(self._graph.nodes())} nodes were visited")
 
         if len(data) != len(self._graph.nodes()):
-            print("Invalid route: Some nodes were visited more than once")
+            logging.warn("Invalid route: Some nodes were visited more than once")
             return None
-        print("All nodes were visited exactly once")
+        logging.info("All nodes were visited exactly once")
 
         distance = 0
         node_id = data[0]
@@ -57,12 +58,12 @@ class TspGraphProvider(Core):
             try:
                 edge = self._graph[node_id][next_node_id]
             except KeyError:
-                print(f"Invalid route: Edge {node_id} -> {next_node_id} does not exist")
+                logging.warn(f"Invalid route: Edge {node_id} -> {next_node_id} does not exist")
                 return None
 
             distance += edge["weight"]
             node_id = next_node_id
 
-        print("Route found!")
-        print(f"distance: {distance}")
+        logging.info("Route found!")
+        logging.info(f"distance: {distance}")
         return distance

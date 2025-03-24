@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import logging
 from typing import Optional, override
 
 import networkx as nx
@@ -29,7 +30,7 @@ class TspQuboMappingDnx(Core):
         time_steps = map(lambda x: x[1], sorted_tuples)
 
         if list(time_steps) != list(range(self._graph.number_of_nodes())):
-            print("Invalid route")
+            logging.warn("Invalid route")
             return None
 
         return list(path)
