@@ -5,7 +5,8 @@ from typing import Optional, override
 import networkx as nx
 import dwave_networkx as dnx
 
-from quark.protocols import Core
+from quark.core import Core
+from quark.interface_types.qubo import Qubo
 
 @dataclass
 class TspQuboMappingDnx(Core):
@@ -15,11 +16,10 @@ class TspQuboMappingDnx(Core):
 
 
     @override
-    def preprocess(self, data: nx.Graph) -> dict:
+    def preprocess(self, data: nx.Graph) -> Qubo:
         self._graph = data
         q = dnx.traveling_salesperson_qubo(data)
-        return {"Q": q}
-
+        return Qubo.from_dict(q)
 
     @override
     def postprocess(self, data: dict) -> Optional[list[int]]:

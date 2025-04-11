@@ -4,7 +4,7 @@ import math
 
 import networkx as nx
 
-from quark.protocols import Core
+from quark.core import Core
 import logging
 
 @dataclass

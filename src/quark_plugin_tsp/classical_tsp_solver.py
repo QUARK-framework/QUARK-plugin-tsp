@@ -3,14 +3,13 @@ from typing import Optional, override
 
 import networkx as nx
 
-from quark.protocols import Core
+from quark.core import Core
 
 @dataclass
 class ClassicalTspSolver(Core):
     """
     Module for solving the TSP problem using a classical solver
     """
-
 
     @override
     def preprocess(self, data: nx.Graph) -> None:
