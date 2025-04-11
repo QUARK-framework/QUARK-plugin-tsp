@@ -7,7 +7,7 @@ Homepage = "https://github.com/QUARK-framework/QUARK-plugin-tsp"
 
 [project]
 name = "QUARK-plugin-tsp"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
     { name = "Philipp Ross", email = "philipp.ross@bmw.de" },
     { name = "Marvin Erdmann", email = "marvin.erdmann@bmw.de" },
