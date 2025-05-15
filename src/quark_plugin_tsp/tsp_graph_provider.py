@@ -10,8 +10,7 @@ from quark.interface_types import Graph, InterfaceType, Other
 
 @dataclass
 class TspGraphProvider(Core):
-    """
-    A module for creating random weighted complete graphs for the TSP problem.
+    """A module for creating random weighted complete graphs for the TSP problem.
 
     :param nodes: The number of nodes in the graph
     :param seed: The seed for the random number generator
@@ -23,16 +22,16 @@ class TspGraphProvider(Core):
     @override
     def preprocess(self, data: InterfaceType) -> Result:
         # Create a random graph without edges
-        G = nx.random_geometric_graph(self.nodes, radius=0.0, seed=self.seed)
-        pos = nx.get_node_attributes(G, "pos")
+        g = nx.random_geometric_graph(self.nodes, radius=0.0, seed=self.seed)
+        pos = nx.get_node_attributes(g, "pos")
 
         # Add edges with weights equal to the Euclidean distance between the nodes
         for i in range(len(pos)):
             for j in range(i + 1, len(pos)):
                 dist = math.hypot(pos[i][0] - pos[j][0], pos[i][1] - pos[j][1])
-                G.add_edge(i, j, weight=dist)
+                g.add_edge(i, j, weight=dist)
 
-        self._graph = G
+        self._graph = g
         return Data(Graph.from_nx_graph(self._graph))
 
     @override
@@ -49,7 +48,7 @@ class TspGraphProvider(Core):
 
                 if len(l) != len(self._graph.nodes()):
                     logging.warn(
-                        "Invalid route: Some nodes were visited more than once"
+                        "Invalid route: Some nodes were visited more than once",
                     )
                     return Data(None)
                 logging.info("All nodes were visited exactly once")
@@ -60,9 +59,7 @@ class TspGraphProvider(Core):
                     try:
                         edge = self._graph[node_id][next_node_id]
                     except KeyError:
-                        logging.warn(
-                            f"Invalid route: Edge {node_id} -> {next_node_id} does not exist"
-                        )
+                        logging.warn(f"Invalid route: Edge {node_id} -> {next_node_id} does not exist")
                         return Data(None)
 
                     distance += edge["weight"]
@@ -70,6 +67,7 @@ class TspGraphProvider(Core):
 
                 logging.info("Route found!")
                 logging.info(f"distance: {distance}")
+
                 return Data(Other(distance))
 
             case _:

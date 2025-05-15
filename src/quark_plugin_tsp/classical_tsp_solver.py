@@ -8,16 +8,11 @@ from quark.interface_types import Graph, Other
 
 @dataclass
 class ClassicalTspSolver(Core):
-    """
-    Module for solving the TSP problem using a classical solver
-    """
+    """Module for solving the TSP problem using a classical solver."""
 
     @override
     def preprocess(self, data: Graph) -> Result:
-        self._solution = nx.approximation.traveling_salesman_problem(
-            data.as_nx_graph(), cycle=False
-        )
-
+        self._solution = nx.approximation.traveling_salesman_problem(data.as_nx_graph(), cycle=False)
         return Data(None)
 
     @override
