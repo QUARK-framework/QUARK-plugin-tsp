@@ -20,14 +20,15 @@ class TspQuboMappingDnx(Core):
     @override
     def postprocess(self, data: Other) -> Result:
         d = data.data
-        # TODO documentation why sorted?
-        relevant_data = filter(lambda x: x[1] == 1, d.items())
-        tuples = (x[0] for x in relevant_data)
+        # Only keep the tuples corresponding to |1> qubits
+        tuples = (item[0] for item in d.items() if item[1])
+        # Sort in order of time steps
         sorted_tuples = sorted(tuples, key=lambda x: x[1])
-        path = (x[0] for x in sorted_tuples)
-        time_steps = (x[1] for x in sorted_tuples)
 
-        if list(time_steps) != list(range(self._graph.number_of_nodes())):
+        path = [x[0] for x in sorted_tuples]
+        time_steps = [x[1] for x in sorted_tuples]
+
+        if time_steps != list(range(self._graph.number_of_nodes())):
             logging.warn("Invalid route")
             return Data(None)
-        return Data(Other(list(path)))
+        return Data(Other(path))
