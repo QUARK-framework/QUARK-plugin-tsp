@@ -35,41 +35,33 @@ class TspGraphProvider(Core):
         return Data(Graph.from_nx_graph(self._graph))
 
     @override
-    def postprocess(self, data: InterfaceType) -> Result:
-        match data:
-            case None:
-                logging.warn("No route found")
+    def postprocess(self, data: Other[list]) -> Result:
+        l = data.data
+        if any(node not in l for node in self._graph.nodes()):
+            logging.warn("Invalid route: Not all nodes were visited")
+            return Data(None)
+        logging.info(f"All {len(self._graph.nodes())} nodes were visited")
+
+        if len(l) != len(self._graph.nodes()):
+            logging.warn(
+                "Invalid route: Some nodes were visited more than once",
+            )
+            return Data(None)
+        logging.info("All nodes were visited exactly once")
+
+        distance = 0
+        node_id = l[0]
+        for next_node_id in l[1:]:
+            try:
+                edge = self._graph[node_id][next_node_id]
+            except KeyError:
+                logging.warn(f"Invalid route: Edge {node_id} -> {next_node_id} does not exist")
                 return Data(None)
-            case Other(list(l)):
-                if any(node not in l for node in self._graph.nodes()):
-                    logging.warn("Invalid route: Not all nodes were visited")
-                    return Data(None)
-                logging.info(f"All {len(self._graph.nodes())} nodes were visited")
 
-                if len(l) != len(self._graph.nodes()):
-                    logging.warn(
-                        "Invalid route: Some nodes were visited more than once",
-                    )
-                    return Data(None)
-                logging.info("All nodes were visited exactly once")
+            distance += edge["weight"]
+            node_id = next_node_id
 
-                distance = 0
-                node_id = l[0]
-                for next_node_id in l[1:]:
-                    try:
-                        edge = self._graph[node_id][next_node_id]
-                    except KeyError:
-                        logging.warn(f"Invalid route: Edge {node_id} -> {next_node_id} does not exist")
-                        return Data(None)
+        logging.info("Route found!")
+        logging.info(f"distance: {distance}")
 
-                    distance += edge["weight"]
-                    node_id = next_node_id
-
-                logging.info("Route found!")
-                logging.info(f"distance: {distance}")
-
-                return Data(Other(distance))
-
-            case _:
-                # TODO add error message
-                raise TypeError
+        return Data(Other(distance))
