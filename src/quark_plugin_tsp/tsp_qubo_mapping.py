@@ -86,7 +86,7 @@ class TspQuboMapping(Core):
         validity_check_variable = 0
         for i, x in enumerate(d):
             if x == 1:
-                path.insert(i%n, i // n)
+                path[i%n] = i // n
                 validity_check_variable += 1
         if validity_check_variable != n:
             logging.warn("Invalid route: not all cities are visited exactly once")
