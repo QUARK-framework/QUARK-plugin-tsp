@@ -79,16 +79,17 @@ class TspQuboMapping(Core):
         return Data(Qubo.from_matrix(q))
 
     @override
-    def postprocess(self, data: Other) -> Result:
+    def postprocess(self, data: Other[list]) -> Result:
         d = data.data
-        # Only keep the tuples corresponding to |1> qubits
-        tuples = (item[0] for item in d.items() if item[1])
-        # Sort in order of time steps
-        sorted_tuples = sorted(tuples, key=lambda x: x[1])
-
-        path = [x[0] for x in sorted_tuples]
-        time_steps = [x[1] for x in sorted_tuples]
-        if time_steps != list(range(len(self.matrix))):
-            logging.warn("Invalid route")
+        n = int(np.sqrt(len(d)))
+        path = [0]*n
+        validity_check_variable = 0
+        for i, x in enumerate(d):
+            if x == 1:
+                path.insert(i%n, i // n)
+                validity_check_variable += 1
+        if validity_check_variable != n:
+            logging.warn("Invalid route: not all cities are visited exactly once")
             return Data(None)
-        return Data(Other(path))
+        else:
+            return Data(Other(path))
